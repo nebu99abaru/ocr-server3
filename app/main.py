@@ -19,6 +19,8 @@ async def upload_pdf(file: UploadFile = File(...)):
     job_id = str(uuid.uuid4())
     file_path = UPLOAD_DIR / f"{job_id}_{file.filename}"
 
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
@@ -35,6 +37,9 @@ async def get_status(job_id: str):
 @app.get("/result/{job_id}")
 async def get_result(job_id: str):
     result_file = RESULT_DIR / f"{job_id}.txt"
+
+    result_file.parent.mkdir(parents=True, exist_ok=True)
+
     if not result_file.exists():
         return JSONResponse(status_code=404, content={"error": "Result not available"})
     with open(result_file, "r", encoding="utf-8") as f:
