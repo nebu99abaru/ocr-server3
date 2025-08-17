@@ -3,10 +3,19 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY requirements.txt ./
-RUN apt-get update && apt-get install -y ocrmypdf tesseract-ocr ghostscript && \
-    pip install --no-cache-dir -r requirements.txt
 
-COPY app/ ./app
-WORKDIR /app/app
+RUN apt-get update && apt-get install -y \
+    libjpeg-dev \
+    poppler-utils \
+    zlib1g-dev \
+    tesseract-ocr \
+    poppler-utils \
+    ghostscript \
+    libgl1 \
+ && rm -rf /var/lib/apt/lists/* \
+ && pip install --no-cache-dir -r requirements.txt
+
+WORKDIR /app
+COPY app/ .
 
 CMD ["celery", "-A", "tasks", "worker", "--loglevel=info"]
