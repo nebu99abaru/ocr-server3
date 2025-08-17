@@ -3,4 +3,8 @@ uvicorn
 celery==5.3.5
 redis==5.0.2
 ocrmypdf
+python-multipart
+pytesseract
+pdf2image
 pillow
+PyMuPDF
